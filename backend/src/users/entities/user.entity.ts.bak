@@ -1,0 +1,52 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Company } from '../../companies/entities/company.entity';
+import { Department } from '../../departments/entities/department.entity';
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ length: 150 })
+  name: string;
+
+  @Column({ length: 150, unique: true })
+  email: string;
+
+  // Fk
+  @Column()
+  companyId: number;
+
+  @Column()
+  departmentId: number;
+
+  // 1 is deleted, 0 if soft deleted
+  @Column({ type: 'tinyint', default: 1 })
+  status: number; 
+  // @Column({ type: 'tinyint', width: 1, default: 0 })
+  // isDelete: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  // Relations
+
+  @ManyToOne(() => Company, (company) => company.users)
+  @JoinColumn({ name: 'companyId' })
+  company: Company;
+
+  @ManyToOne(() => Department, (department) => department.users)
+  @JoinColumn({ name: 'departmentId' })
+  department: Department;
+}
